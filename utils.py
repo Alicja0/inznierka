@@ -11,7 +11,7 @@ def get_unique_exp_name(exp_name: str):
 def setup_experiment_output(experiment_config: dict):
     experiment_name: str = get_unique_exp_name(experiment_config["experiment_name"])
     full_experiment_path: str = os.path.join(experiment_config["output_directory"], experiment_name)
-    os.mkdir(full_experiment_path)
+    os.makedirs(full_experiment_path, exist_ok=True)
     with open(os.path.join(full_experiment_path, "config.json"), 'w') as stream:
         yaml.dump(experiment_config, stream)
     return full_experiment_path

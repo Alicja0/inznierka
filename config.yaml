@@ -1,6 +1,6 @@
 image_resolution: 224
-data_directory: C:\Users\skrzy\Documents\dzialalnosc\prywatnie mentoring\ODIR\
-output_directory: C:\Users\skrzy\Documents\dzialalnosc\prywatnie mentoring\ODIR\experiments
+data_directory: C:\Users\admin\Desktop\Praca Inżynierska\Dane\ODIR-5K
+output_directory: C:\Users\admin\Desktop\Praca Inżynierska\Dane\ODIR-5K\experiments
 experiment_name: test
 images_path: "preprocessed_images"
 metadata_file_name: "full_df.csv"
