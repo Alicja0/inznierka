@@ -2,6 +2,7 @@ import os
 
 import cv2
 import numpy as np
+import pandas as pd
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 
@@ -11,9 +12,10 @@ def get_full_image_path(filename: str, experiment_config: dict):
                         filename)
 
 
-def show_sample_image(df, experiment_config: dict):
+def show_sample_image(df: pd.DataFrame, experiment_config: dict):
     sample_filename = df.sample(1)["Left-Fundus"].values[0]
     sample_filepath = get_full_image_path(sample_filename, experiment_config=experiment_config)
+    print(sample_filepath)
     image = preprocess_image(path=sample_filepath, experiment_config=experiment_config)
     cv2.imshow("Example", image)
     # waits
@@ -25,15 +27,46 @@ def show_sample_image(df, experiment_config: dict):
     cv2.destroyAllWindows()
 
 
-def print_data_statistics(df_train, df_val, df_test, experiment_config):
+def print_data_statistics(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFrame, experiment_config: dict):
+    """
+        Prints the class distribution statistics for the training, validation, and test datasets.
+
+        Parameters:
+        df_train (pd.DataFrame): The training dataset containing features and target.
+        df_val (pd.DataFrame): The validation dataset containing features and target.
+        df_test (pd.DataFrame): The test dataset containing features and target.
+        experiment_config (dict): A configuration dictionary containing the key "decision_class" which specifies the
+         target column for class distribution analysis.
+
+        Returns:
+        None: This function prints the class distributions of the specified target column
+        in each of the provided datasets.
+        """
     print("Train, ", df_train[experiment_config["decision_class"]].value_counts())
     print("Validation, ", df_val[experiment_config["decision_class"]].value_counts())
     print("Test, ", df_test[experiment_config["decision_class"]].value_counts())
 
 
-def prepare_data(df, experiment_config: dict):
-    df_train, df_test = train_test_split(df, test_size=0.1)
-    df_train, df_val = train_test_split(df_train, test_size=0.1)
+def clean_eyes_df(df: pd.DataFrame, experiment_config: dict):
+    clean_rows = []
+    for _, patient_row in df.iterrows():
+        left_eye_filename = get_full_image_path(filename=patient_row["Left-Fundus"],
+                                                experiment_config=experiment_config)
+        right_eye_filename = get_full_image_path(filename=patient_row["Right-Fundus"],
+                                                 experiment_config=experiment_config)
+        if os.path.exists(left_eye_filename) and os.path.exists(right_eye_filename):
+            clean_rows.append(patient_row)
+    return pd.DataFrame(clean_rows).reset_index()
+
+
+def prepare_data(df: pd.DataFrame, experiment_config: dict):
+    print(f"Preparing a set of {len(df)} images.")
+    df_clean = clean_eyes_df(df=df, experiment_config=experiment_config)
+    print(f"Removed missing images. Only {len(df_clean)} remained.")
+    df_train, df_test = train_test_split(df_clean, test_size=0.1, random_state=experiment_config['seed'],
+                                         stratify=df_clean[experiment_config['decision_class']])
+    df_train, df_val = train_test_split(df_train, test_size=0.1, random_state=experiment_config['seed'],
+                                        stratify=df_train[experiment_config['decision_class']])
 
     print_data_statistics(df_train, df_val, df_test, experiment_config)
 
@@ -45,9 +78,10 @@ def prepare_data(df, experiment_config: dict):
 
 
 def preprocess_image(path: str, experiment_config: dict):
+    assert os.path.exists(path), f"{path} does not exist"
     image = cv2.imread(path)
-    cropped_image = remove_bg(image)
-    image_resized = cv2.resize(cropped_image,
+    # cropped_image = remove_bg(image)
+    image_resized = cv2.resize(image,
                                (experiment_config["image_resolution"], experiment_config["image_resolution"]))
     return image_resized / 255
 
@@ -68,7 +102,7 @@ def remove_bg(image):
     return image[ymin:ymax, xmin:xmax]
 
 
-def get_data_generator(df, experiment_config: dict, is_training: bool):
+def get_data_generator(df: pd.DataFrame, experiment_config: dict, is_training: bool):
     def generator():
         for _, raw in df.iterrows():
             left_eye_filename = get_full_image_path(filename=raw["Left-Fundus"], experiment_config=experiment_config)
