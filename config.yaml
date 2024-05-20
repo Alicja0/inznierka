@@ -1,0 +1,7 @@
+image_resolution: 224
+data_directory: C:\Users\admin\Desktop\Praca Inżynierska\Dane\ODIR-5K
+images_path: "Images"
+metadata_file_name: "data.xlsx"
+batch_size: 32
+shuffling_buffer: 10 # TODO change to a greater number
+decision_class: "A"
