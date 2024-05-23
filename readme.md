@@ -48,8 +48,7 @@ Sugestie dotyczące przyszłych prac i możliwych ulepszeń projektu:
 - rozszerzenie projektu na inne choroby oczu
 - integracja z systemami klinicznymi 
 - dalsze badania i experymenty
-- 
+  
 ## Contributors
-- Alicja Polewska ( link do githaba i repo )
-- Artur Żokowski ( link do Githuba i repo)
-- 
+- Alicja Polewska 
+- Artur Żokowski 
