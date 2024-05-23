@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 def get_full_image_path(filename: str, experiment_config: dict):
     return os.path.join(experiment_config['data_directory'], experiment_config['images_path'],
                         filename)
-
+# Funkcja tworzy pełną ścieżkę do pliku obrazu na podstawie nazwy pliku i ścieżek z pliku konfiguracyjnego
 
 def show_sample_image(df: pd.DataFrame, experiment_config: dict):
     sample_filename = df.sample(1)["Left-Fundus"].values[0]
@@ -22,7 +22,7 @@ def show_sample_image(df: pd.DataFrame, experiment_config: dict):
     # for user to press any key
     # (this is necessary to avoid Python kernel form crashing)
     cv2.waitKey(0)
-
+    # Funkcja losowo wybiera jeden obraz z dataframe, przetwarza go i wyświetla przy użyciu OpenCV
     # closing all open windows
     cv2.destroyAllWindows()
 
@@ -45,7 +45,7 @@ def print_data_statistics(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test:
     print("Train, ", df_train[experiment_config["decision_class"]].value_counts())
     print("Validation, ", df_val[experiment_config["decision_class"]].value_counts())
     print("Test, ", df_test[experiment_config["decision_class"]].value_counts())
-
+# Funkcja drukuje statystyki rozkładu klas dla zbiorów treningowych, walidacyjnych i testowych
 
 def clean_eyes_df(df: pd.DataFrame, experiment_config: dict):
     clean_rows = []
@@ -57,7 +57,7 @@ def clean_eyes_df(df: pd.DataFrame, experiment_config: dict):
         if os.path.exists(left_eye_filename) and os.path.exists(right_eye_filename):
             clean_rows.append(patient_row)
     return pd.DataFrame(clean_rows).reset_index()
-
+# Funkcja usuwa z dataframe wiersze, dla których brakuje obrazów lewego lub prawego oka.
 
 def prepare_data(df: pd.DataFrame, experiment_config: dict):
     print(f"Preparing a set of {len(df)} images.")
@@ -75,7 +75,7 @@ def prepare_data(df: pd.DataFrame, experiment_config: dict):
     test_generator = get_data_generator(df_test, experiment_config, is_training=False)
 
     return train_generator, val_generator, test_generator
-
+# Funkcja przygotowuje dane do trenowania modelu: czyszczenie danych, podział na zbiory treningowy, walidacyjny i testowy oraz generowanie statystyk
 
 def preprocess_image(path: str, experiment_config: dict):
     assert os.path.exists(path), f"{path} does not exist"
@@ -84,7 +84,7 @@ def preprocess_image(path: str, experiment_config: dict):
     image_resized = cv2.resize(image,
                                (experiment_config["image_resolution"], experiment_config["image_resolution"]))
     return image_resized / 255
-
+# Funkcja przetwarza obraz: wczytuje, zmienia jego rozmiar i normalizuje.
 
 def remove_bg(image):
     # https://medium.com/@HeCanThink/rembg-effortlessly-remove-backgrounds-in-python-c2248501f992
@@ -100,7 +100,7 @@ def remove_bg(image):
 
     # crop the image at the bounds adding back the two blackened rows at the bottom
     return image[ymin:ymax, xmin:xmax]
-
+#Funkcja usuwa tło z obrazu przy użyciu przetwarzania obrazu (prógowanie i wycinanie
 
 def get_data_generator(df: pd.DataFrame, experiment_config: dict, is_training: bool):
     def generator():
@@ -126,3 +126,4 @@ def get_data_generator(df: pd.DataFrame, experiment_config: dict, is_training: b
         ds = ds.shuffle(experiment_config["shuffling_buffer"])
     ds = ds.batch(experiment_config["batch_size"])
     return ds
+# Funkcja tworzy generator danych dla TensorFlow. Generator przetwarza obrazy i tworzy batch'e danych
