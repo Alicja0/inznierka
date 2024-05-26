@@ -1,0 +1,12 @@
+image_resolution: 224
+data_directory: C:\Users\skrzy\Documents\dzialalnosc\prywatnie mentoring\ODIR\
+output_directory: C:\Users\skrzy\Documents\dzialalnosc\prywatnie mentoring\ODIR\experiments
+experiment_name: test
+images_path: "preprocessed_images"
+metadata_file_name: "full_df.csv"
+epochs: 1 # TODO change to 100
+batch_size: 8
+shuffling_buffer: 10 # TODO change to a greater number
+decision_class: "A"
+seed: 421
+weighted_loss: true
