@@ -19,8 +19,8 @@ def evaluate_binary_model(model: tf.keras.Model, data: dict, output_directory: s
     for subset in data.keys():
         evaluate_binary_model_single_subset(model=model, subset=subset, data=data[subset],
                                             output_directory=output_directory)
-# Funkcja do oceny modelu binarnego na wszystkich podzbiorach danych. Przechodzi przez wszystkie podzbiory (train, val, test)
-# i wywołuje evaluate_binary_model_single_subset dla każdego z nich.
+    # Funkcja do oceny modelu binarnego na wszystkich podzbiorach danych. Przechodzi przez wszystkie podzbiory (train, val, test)
+    # i wywołuje evaluate_binary_model_single_subset dla każdego z nich.
 
 
 def run_binary_experiment(data: dict, experiment_config: dict, output_directory: str):
