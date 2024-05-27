@@ -6,8 +6,8 @@ import pandas as pd
 import tensorflow as tf
 from sklearn.metrics import confusion_matrix
 
-from model import create_model
-from utils import calculate_metrics
+from src.model import create_model
+from src.utils import calculate_metrics
 
 
 def get_labels_from_generator(data: tf.data.Dataset, n: int, batch_size: int):

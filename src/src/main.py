@@ -4,9 +4,9 @@ import pandas as pd
 import tensorflow as tf
 import yaml
 
-from data import prepare_data, show_sample_image
-from binary_experiment import run_binary_experiment
-from utils import setup_experiment_output
+from src.data import prepare_data, show_sample_image
+from src.binary_experiment import run_binary_experiment
+from src.utils import setup_experiment_output
 
 
 def main(experiment_config: dict):
