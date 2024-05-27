@@ -39,7 +39,7 @@ def evaluate_binary_model_single_subset(model, subset, data, output_directory: s
     metrics = calculate_metrics(conf_matrix)
     df_with_predictions = add_predictions_to_df(df=df, raw_predictions=raw_predictions, predictions=predictions)
     df_with_predictions.to_csv(os.path.join(output_directory, f"{subset}_predictions.csv"), index=False)
-    with os.path.join(output_directory, f"{subset}_metrics.json") as fp:
+    with open(os.path.join(output_directory, f"{subset}_metrics.json"), "w") as fp:
         json.dump(metrics, fp)
     # TODO sample errors (confusion report)
 
