@@ -1,4 +1,5 @@
 import json
+import math
 import os
 
 import numpy as np
@@ -14,7 +15,7 @@ def get_labels_from_generator(data: tf.data.Dataset, n: int, batch_size: int):
     # Extract labels from the dataset
     labels = []
 
-    for X_batch, y_batch, sample_weights in data.take(n // batch_size):
+    for X_batch, y_batch, sample_weights in data.take(math.ceil(n / batch_size)):
         labels.extend(y_batch.numpy())
 
     # Convert to a numpy array if needed
