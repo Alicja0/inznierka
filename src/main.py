@@ -11,9 +11,10 @@ from src.utils import setup_experiment_output
 
 def main(experiment_config: dict):
     tf.random.set_seed(experiment_config["seed"])
-
+    
     output_directory: str = setup_experiment_output(experiment_config)
-
+    print(f"EXPERIMENT NAME: {os.path.basename(output_directory)}")
+    
     metadata_filepath = os.path.join(experiment_config["data_directory"], experiment_config["metadata_file_name"])
     df: pd.DataFrame = pd.read_csv(metadata_filepath)
     # show_sample_image(df, experiment_config)
