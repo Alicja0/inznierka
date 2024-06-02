@@ -1,6 +1,6 @@
 image_resolution: 224
-data_directory: C:\Users\skrzy\Documents\dzialalnosc\prywatnie mentoring\ODIR\
-output_directory: C:\Users\skrzy\Documents\dzialalnosc\prywatnie mentoring\ODIR\experiments
+data_directory: C:\Users\skrzy\Documents\dzialalnosc\prywatnie_mentoring\ODIR\
+output_directory: C:\Users\skrzy\Documents\dzialalnosc\prywatnie_mentoring\ODIR\experiments
 experiment_name: test
 images_path: "preprocessed_images"
 metadata_file_name: "full_df.csv"
@@ -10,3 +10,16 @@ shuffling_buffer: 10 # TODO change to a greater number
 decision_class: "A"
 seed: 421
 weighted_loss: true
+augmentations_config:
+   flip: true
+   rotate: true
+   rotate_limit: 45
+   shift_scale_rotate: true
+   shift_limit: 0.1
+   scale_limit: 0.2
+   grid_distortion: true
+   optical_distortion: true
+   blur: true
+   blur_limit: 5 # odd numbers greater than 1
+   gauss_noise: true
+   noise_var_limit: [ 0.0, 25.0 ]
