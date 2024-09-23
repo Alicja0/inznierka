@@ -57,6 +57,9 @@ def run_binary_experiment(data: dict, experiment_config: dict, output_directory:
     model = create_model(experiment_config=experiment_config)
     tf.keras.utils.plot_model(model, to_file=os.path.join(output_directory, 'model.png'))
     model.compile(loss="binary_crossentropy", metrics=["accuracy"])
+    # tensorboard logs with plots
+    log_dir = os.path.join(output_directory, "tensorboard")
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir)
 
     # Initialize EarlyStopping callback
     early_stopping = tf.keras.callbacks.EarlyStopping(patience=5,
@@ -69,10 +72,9 @@ def run_binary_experiment(data: dict, experiment_config: dict, output_directory:
                                                       restore_best_weights=True,
                                                       # restore model weights from the epoch
                                                       # with the best value of the monitored metric
-                                                      verbose=1)
-    # TODO remove steps_per_epoch=2, validation_steps=1
-    model.fit(data["train"], validation_data=data["val"], epochs=experiment_config["epochs"], steps_per_epoch=1,
-              validation_steps=1, callbacks=[early_stopping])
+                                                      verbose=1,
+                                                      )
+    model.fit(data["train"], validation_data=data["val"], epochs=experiment_config["epochs"], callbacks=[early_stopping, tensorboard_callback])
     model.save(os.path.join(output_directory, "model.keras"))
 
     evaluate_binary_model(model=model, data={"train": data["train_eval"], "val": data["val"], "test": data["test"]},

@@ -6,6 +6,7 @@ def parse_requirements(filename):
         return [line.strip() for line in file if line and not line.startswith('#')]
 
 
+
 # Read requirements from requirements.txt
 requirements = parse_requirements('requirements.txt')
 

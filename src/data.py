@@ -4,8 +4,11 @@ import cv2
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.utils.class_weight import compute_class_weight
+
+from src.augmentations import augment_image
 
 
 def get_full_image_path(filename: str, experiment_config: dict):
@@ -13,19 +16,31 @@ def get_full_image_path(filename: str, experiment_config: dict):
                         filename)
 
 
+# Display the original and augmented images using matplotlib
+def display_image(image: np.ndarray):
+    image_rgb = cv2.cvtColor((image * 255).astype(np.uint8), cv2.COLOR_BGR2RGB)
+
+    plt.imshow(image_rgb)
+    plt.suptitle('Image')
+    plt.axis('off')
+
+    plt.show()
+
+
 def show_sample_image(df: pd.DataFrame, experiment_config: dict):
     sample_filename = df.sample(1)["Left-Fundus"].values[0]
     sample_filepath = get_full_image_path(sample_filename, experiment_config=experiment_config)
     print(sample_filepath)
     image = preprocess_image(path=sample_filepath, experiment_config=experiment_config)
-    cv2.imshow("Example", image)
-    # waits
-    # for user to press any key
-    # (this is necessary to avoid Python kernel form crashing)
-    cv2.waitKey(0)
-
-    # closing all open windows
-    cv2.destroyAllWindows()
+    display_image(image=image)
+    # cv2.imshow("Example", image)
+    # # waits
+    # # for user to press any key
+    # # (this is necessary to avoid Python kernel form crashing)
+    # cv2.waitKey(0)
+    #
+    # # closing all open windows
+    # cv2.destroyAllWindows()
 
 
 def print_data_statistics(df_train: pd.DataFrame, df_val: pd.DataFrame, df_test: pd.DataFrame, experiment_config: dict):
@@ -93,7 +108,8 @@ def preprocess_image(path: str, experiment_config: dict):
     assert os.path.exists(path), f"{path} does not exist"
     image = cv2.imread(path)
     # cropped_image = remove_bg(image)
-    image_resized = cv2.resize(image,
+    augmented_image = augment_image(image=image, config=experiment_config["augmentations_config"])
+    image_resized = cv2.resize(augmented_image,
                                (experiment_config["image_resolution"], experiment_config["image_resolution"]))
     return image_resized / 255
 
