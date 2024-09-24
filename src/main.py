@@ -16,6 +16,7 @@ def main(experiment_config: dict):
     print(f"EXPERIMENT NAME: {os.path.basename(output_directory)}")
     metadata_filepath = os.path.join(experiment_config["data_directory"], experiment_config["metadata_file_name"])
     df: pd.DataFrame = pd.read_csv(metadata_filepath)
+    assert experiment_config["decision_class"] in df.columns
     # show_sample_image(df, experiment_config)
     # exit(0)
     data_generators, classes, datasets = prepare_data(df=df, experiment_config=experiment_config)
