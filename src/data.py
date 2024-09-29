@@ -77,7 +77,9 @@ def clean_eyes_df(df: pd.DataFrame, experiment_config: dict):
 
 def prepare_data(df: pd.DataFrame, experiment_config: dict):
     print(f"Preparing a set of {len(df)} images.")
+    assert experiment_config['decision_class'] in df, f"Columns: {df.columns}"
     df_clean = clean_eyes_df(df=df, experiment_config=experiment_config)
+    assert experiment_config['decision_class'] in df_clean, f"Columns: {df_clean.columns}"
     print(f"Removed missing images. Only {len(df_clean)} remained.")
     df_train, df_test = train_test_split(df_clean, test_size=0.1, random_state=experiment_config['seed'],
                                          stratify=df_clean[experiment_config['decision_class']])
